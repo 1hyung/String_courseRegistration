@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 
     val courseResponse2 = CourseResponse(
         id = 1L,
-        title = "abc",
+        title = "abcde",
         description = null,
         status = "CLOSED",
         maxApplicants = 30,
