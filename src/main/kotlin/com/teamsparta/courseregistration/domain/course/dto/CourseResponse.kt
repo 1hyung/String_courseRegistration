@@ -29,4 +29,5 @@ fun main(args: Array<String>) {
     )
 
     println(courseResponse1.equals(courseResponse2))
+    println(courseResponse1 == courseResponse2)
 }
