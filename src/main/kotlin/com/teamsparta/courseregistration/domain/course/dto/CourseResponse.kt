@@ -10,7 +10,7 @@ data class CourseResponse(
 )
 
 fun main(args: Array<String>) {
-    val courseResponse = CourseResponse(
+    val courseResponse1 = CourseResponse(
         id = 1L,
         title = "abc",
         description = null,
@@ -19,8 +19,14 @@ fun main(args: Array<String>) {
         numApplicants = 30,
     )
 
-    val (id, title, description, status, maxApplicants) = courseResponse
-    println(id)
-    println(title)
-    println(courseResponse.toString())
+    val courseResponse2 = CourseResponse(
+        id = 1L,
+        title = "abc",
+        description = null,
+        status = "CLOSED",
+        maxApplicants = 30,
+        numApplicants = 30,
+    )
+
+    println(courseResponse1.equals(courseResponse2))
 }
