@@ -62,7 +62,6 @@ class CourseController(  // 이것을 알랴주는 것이 Handler Mapping 알려
             .status(HttpStatus.NO_CONTENT)
             .build()
     }
-
 }
 
 // CourseController.kt
