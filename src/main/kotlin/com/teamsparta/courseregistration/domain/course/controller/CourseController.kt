@@ -4,16 +4,11 @@ import com.teamsparta.courseregistration.domain.course.dto.CourseResponse
 import com.teamsparta.courseregistration.domain.course.dto.CreateCourseRequest
 import com.teamsparta.courseregistration.domain.course.dto.UpdateCourseRequest
 import com.teamsparta.courseregistration.domain.course.service.CourseService
+import com.teamsparta.courseregistration.domain.exception.ModelNotFoundException
+import com.teamsparta.courseregistration.domain.exception.dto.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RequestMapping("/courses")//courses 관련된거 CourseController가 담당하게 된다.
@@ -26,41 +21,35 @@ class CourseController(  // 이것을 알랴주는 것이 Handler Mapping 알려
 
     @GetMapping()
     fun getCourseList(): ResponseEntity<List<CourseResponse>> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(courseService.getAllCourseList())
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.getAllCourseList())
     }
 
     @GetMapping("/{courseId}")
     fun getCourse(@PathVariable courseId: Long): ResponseEntity<CourseResponse> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(courseService.getCourseById(courseId))
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.getCourseById(courseId))
     }
 
     @PostMapping
     fun createCourse(@RequestBody createCourseRequest: CreateCourseRequest): ResponseEntity<CourseResponse> {
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(courseService.createCourse(createCourseRequest))
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseService.createCourse(createCourseRequest))
     }
 
     @PutMapping("/{courseId}")
     fun updateCourse(
-        @PathVariable courseId: Long,
-        @RequestBody updateCourseRequest: UpdateCourseRequest
+        @PathVariable courseId: Long, @RequestBody updateCourseRequest: UpdateCourseRequest
     ): ResponseEntity<CourseResponse> {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(courseService.updateCourse(courseId, updateCourseRequest))
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.updateCourse(courseId, updateCourseRequest))
     }
 
     @DeleteMapping("/{courseId}")
     fun deleteCourse(@PathVariable courseId: Long): ResponseEntity<Unit> {
         courseService.deleteCourse(courseId)
-        return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+
+    @ExceptionHandler(ModelNotFoundException::class)
+    fun handleModelNotFoundException(e: ModelNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
     }
 }
 
