@@ -31,6 +31,10 @@ class CourseServiceImpl : CourseService {
     @Transactional
     override fun createCourse(request: CreateCourseRequest): CourseResponse {
         // TODO: request를 Course로 변환 후 DB에 저장
+        if (request.title.length > 50) {
+            throw RuntimeException()
+        }//if문 안에는 Booleen 형태로만 가능
+        return CourseResponse(123, "0", null, "null", 123, 123)
         TODO("Not yet implemented")
     }
 
@@ -108,7 +112,7 @@ class CourseServiceImpl : CourseService {
     override fun updateCourseApplicationStatus(
         courseId: Long,
         applicationId: Long,
-        request: UpdateApplicationStatusRequest
+        request: UpdateApplicationStatusRequest,
     ): CourseApplicationResponse {
         // TODO: 만약 courseId, applicationId에 해당하는 CourseApplication이 없다면 throw ModelNotFoundException
         // TODO: 만약 status가 이미 변경된 상태면 throw IllegalStateException
