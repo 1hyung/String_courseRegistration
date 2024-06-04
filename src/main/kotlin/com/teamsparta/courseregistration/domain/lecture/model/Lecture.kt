@@ -1,8 +1,8 @@
 package com.teamsparta.courseregistration.domain.lecture.model
 
-import com.teamsparta.courseregistration.domain.course.model.Course
 import com.teamsparta.courseregistration.domain.lecture.dto.LectureResponse
 import jakarta.persistence.*
+import org.example.courseregistration.domain.course.model.Course
 
 @Entity
 @Table(name = "lecture")

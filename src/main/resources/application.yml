@@ -1,5 +1,11 @@
-#spring:
-#  jpa:
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
+
+    username: postgres.msyhbotersopizvttzxt
+    password: H7.VYmCi(x4*wBp
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 1
+  jpa:
+    generate-ddl: true
