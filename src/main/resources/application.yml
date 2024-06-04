@@ -1,5 +1,18 @@
-#spring:
-#  jpa:
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:6543/postgres
+    username: postgres.nstbzajhmanrslnrtjyi
+    password: ryuwonhyung
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20  # Increase pool size as needed
+      minimum-idle: 10  # Minimum idle connections
+      idle-timeout: 30000  # 30 seconds
+      max-lifetime: 600000  # 10 minutes
+      connection-timeout: 30000  # 30 seconds
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    show_sql: true
+    hibernate:
+      ddl-auto: create

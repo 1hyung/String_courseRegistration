@@ -1,8 +1,8 @@
 package com.teamsparta.courseregistration.domain.lecture.model
 
-import com.teamsparta.courseregistration.domain.course.model.Course
 import com.teamsparta.courseregistration.domain.lecture.dto.LectureResponse
 import jakarta.persistence.*
+import com.teamsparta.courseregistration.domain.course.model.Course
 
 @Entity
 @Table(name = "lecture")
@@ -17,11 +17,9 @@ class Lecture(
     @JoinColumn(name = "course_id")
     var course: Course
 ) {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-
 }
 
 fun Lecture.toResponse(): LectureResponse {

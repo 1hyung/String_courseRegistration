@@ -31,6 +31,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     //implementation("com.h2database:h2")
+    //aop 적용하기 위한 설정
+    implementation("org.springframework.boot:spring-boot-starter-aop")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

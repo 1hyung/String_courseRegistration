@@ -8,29 +8,28 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "course")
 class Course(
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     var title: String,
 
     @Column(name = "description")
     var description: String? = null,
 
-    @Enumerated(EnumType.STRING) // CourseStatus에 있는 이름으로 DB에 저장됨
-    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     var status: CourseStatus = CourseStatus.OPEN,
 
-    @Column(name = "max_applicants", nullable = false)
+    @Column(name = "max_applicants")
     val maxApplicants: Int = 30,
 
-    @Column(name = "num_applicants", nullable = false)
+    @Column(name = "num_applicants")
     var numApplicants: Int = 0,
 
-    @OneToMany(mappedBy = "course", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var lectures: MutableList<Lecture> = mutableListOf(),
 
-    @OneToMany(mappedBy = "course", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    var courseApplications: MutableList<CourseApplication> = mutableListOf(),
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var courseApplications: MutableList<CourseApplication> = mutableListOf()
 ) {
-    //ID 같은 경우 constructor에서  받을게 아니기 때문에 {}에서 지정
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
@@ -62,7 +61,6 @@ class Course(
     fun addCourseApplication(courseApplication: CourseApplication) {
         courseApplications.add(courseApplication)
     }
-
 }
 
 fun Course.toResponse(): CourseResponse {
@@ -70,8 +68,8 @@ fun Course.toResponse(): CourseResponse {
         id = id!!,
         title = title,
         description = description,
-        status = status.name,
+        status = status.toString(),
         maxApplicants = maxApplicants,
-        numApplicants = numApplicants
+        numApplicants = numApplicants,
     )
 }
