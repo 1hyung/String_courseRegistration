@@ -1,6 +1,6 @@
 package com.teamsparta.courseregistration.domain.lecture.dto
 
-class UpdateLectureRequest (
+data class UpdateLectureRequest(
     val title: String,
     val videoUrl: String,
 )

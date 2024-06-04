@@ -1,3 +1,5 @@
+package com.teamsparta.courseregistration.domain.course.controller
+
 import com.teamsparta.courseregistration.domain.course.dto.CourseResponse
 import com.teamsparta.courseregistration.domain.course.dto.CreateCourseRequest
 import com.teamsparta.courseregistration.domain.course.dto.UpdateCourseRequest
@@ -16,12 +18,12 @@ class CourseController(
 
     @GetMapping
     fun getCourseList(): ResponseEntity<List<CourseResponse>> {
-        return ResponseEntity.ok(courseService.getAllCourseList())
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.getAllCourseList())
     }
 
     @GetMapping("/{courseId}")
     fun getCourse(@PathVariable courseId: Long): ResponseEntity<CourseResponse> {
-        return ResponseEntity.ok(courseService.getCourseById(courseId))
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.getCourseById(courseId))
     }
 
     @PostMapping
@@ -37,15 +39,15 @@ class CourseController(
     @PutMapping("/{courseId}")
     fun updateCourse(
         @PathVariable courseId: Long,
-        @RequestBody updateCourseRequest: UpdateCourseRequest,
+        @RequestBody updateCourseRequest: UpdateCourseRequest
     ): ResponseEntity<CourseResponse> {
-        return ResponseEntity.ok(courseService.updateCourse(courseId, updateCourseRequest))
+        return ResponseEntity.status(HttpStatus.OK).body(courseService.updateCourse(courseId, updateCourseRequest))
     }
 
     @DeleteMapping("/{courseId}")
     fun deleteCourse(@PathVariable courseId: Long): ResponseEntity<Unit> {
         courseService.deleteCourse(courseId)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @ExceptionHandler(ModelNotFoundException::class)

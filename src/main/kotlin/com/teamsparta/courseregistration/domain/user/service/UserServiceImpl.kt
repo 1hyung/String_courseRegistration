@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class UserServiceImpl (
+class UserServiceImpl(
     private val userRepository: UserRepository
-): UserService {
+) : UserService {
 
     @Transactional
     override fun signUp(request: SignUpRequest): UserResponse {
@@ -29,9 +29,7 @@ class UserServiceImpl (
                 email = request.email,
                 // TODO: 비밀번호 암호화
                 password = request.password,
-                profile = Profile(
-                    nickname = request.nickname
-                ),
+                profile = Profile(nickname = request.nickname),
                 role = when (request.role) {
                     UserRole.STUDENT.name -> UserRole.STUDENT
                     UserRole.TUTOR.name -> UserRole.TUTOR
@@ -44,11 +42,8 @@ class UserServiceImpl (
     @Transactional
     override fun updateUserProfile(userId: Long, request: UpdateUserProfileRequest): UserResponse {
         val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException("User", userId)
-        user.profile = Profile(
-            nickname = request.nickname
-        )
+        user.profile = Profile(nickname = request.nickname)
 
         return userRepository.save(user).toResponse()
     }
-
 }

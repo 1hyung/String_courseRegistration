@@ -1,29 +1,19 @@
-import com.teamsparta.courseregistration.domain.course.dto.CourseResponse
-import com.teamsparta.courseregistration.domain.course.dto.CreateCourseRequest
-import com.teamsparta.courseregistration.domain.course.dto.UpdateCourseRequest
-import com.teamsparta.courseregistration.domain.course.model.CourseStatus
-import com.teamsparta.courseregistration.domain.course.repository.CourseRepository
-import com.teamsparta.courseregistration.domain.course.service.CourseService
-import com.teamsparta.courseregistration.domain.courseapplication.dto.ApplyCourseRequest
-import com.teamsparta.courseregistration.domain.courseapplication.dto.CourseApplicationResponse
-import com.teamsparta.courseregistration.domain.courseapplication.dto.UpdateApplicationStatusRequest
-import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplication
-import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplicationStatus
-import com.teamsparta.courseregistration.domain.courseapplication.model.toResponse
-import com.teamsparta.courseregistration.domain.courseapplication.repository.CourseApplicationRepository
-import com.teamsparta.courseregistration.domain.exception.ModelNotFoundException
-import com.teamsparta.courseregistration.domain.lecture.dto.AddLectureRequest
-import com.teamsparta.courseregistration.domain.lecture.dto.LectureResponse
-import com.teamsparta.courseregistration.domain.lecture.dto.UpdateLectureRequest
-import com.teamsparta.courseregistration.domain.lecture.model.Lecture
-import com.teamsparta.courseregistration.domain.lecture.model.toResponse
-import com.teamsparta.courseregistration.domain.lecture.repository.LectureRepository
-import com.teamsparta.courseregistration.domain.user.repository.UserRepository
-import jakarta.transaction.Transactional
-import org.example.courseregistration.domain.course.model.Course
-import org.example.courseregistration.domain.course.model.toResponse
+package com.teamsparta.courseregistration.domain.course.service
+
+import com.teamsparta.courseregistration.domain.course.dto.*
+import com.teamsparta.courseregistration.domain.course.model.*
+import com.teamsparta.courseregistration.domain.course.repository.*
+import com.teamsparta.courseregistration.domain.courseapplication.dto.*
+import com.teamsparta.courseregistration.domain.courseapplication.model.*
+import com.teamsparta.courseregistration.domain.courseapplication.repository.*
+import com.teamsparta.courseregistration.domain.exception.*
+import com.teamsparta.courseregistration.domain.lecture.dto.*
+import com.teamsparta.courseregistration.domain.lecture.model.*
+import com.teamsparta.courseregistration.domain.lecture.repository.*
+import com.teamsparta.courseregistration.domain.user.repository.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CourseServiceImpl(
@@ -38,10 +28,7 @@ class CourseServiceImpl(
     }
 
     private fun findLectureByIdOrThrow(courseId: Long, lectureId: Long): Lecture {
-        return lectureRepository.findByCourseIdAndId(courseId, lectureId) ?: throw ModelNotFoundException(
-            "Lecture",
-            lectureId
-        )
+        return lectureRepository.findByCourseIdAndId(courseId, lectureId) ?: throw ModelNotFoundException("Lecture", lectureId)
     }
 
     override fun getAllCourseList(): List<CourseResponse> {
@@ -134,8 +121,7 @@ class CourseServiceImpl(
     }
 
     override fun getCourseApplication(courseId: Long, applicationId: Long): CourseApplicationResponse {
-        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId)
-            ?: throw ModelNotFoundException("CourseApplication", applicationId)
+        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId) ?: throw ModelNotFoundException("CourseApplication", applicationId)
         return application.toResponse()
     }
 
@@ -145,14 +131,9 @@ class CourseServiceImpl(
     }
 
     @Transactional
-    override fun updateCourseApplicationStatus(
-        courseId: Long,
-        applicationId: Long,
-        request: UpdateApplicationStatusRequest,
-    ): CourseApplicationResponse {
+    override fun updateCourseApplicationStatus(courseId: Long, applicationId: Long, request: UpdateApplicationStatusRequest): CourseApplicationResponse {
         val course = findCourseByIdOrThrow(courseId)
-        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId)
-            ?: throw ModelNotFoundException("CourseApplication", applicationId)
+        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId) ?: throw ModelNotFoundException("CourseApplication", applicationId)
 
         if (application.isProceeded()) {
             throw IllegalStateException("Application is already proceeded. applicationId: $applicationId")
@@ -171,11 +152,9 @@ class CourseServiceImpl(
                 }
                 courseRepository.save(course)
             }
-
             CourseApplicationStatus.REJECTED.name -> {
                 application.reject()
             }
-
             else -> {
                 throw IllegalArgumentException("Invalid status: ${request.status}")
             }

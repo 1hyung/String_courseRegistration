@@ -1,4 +1,4 @@
-package com.teamsparta.courseregistration.infra.swagger.aop
+package com.teamsparta.courseregistration.infra.aop
 
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around

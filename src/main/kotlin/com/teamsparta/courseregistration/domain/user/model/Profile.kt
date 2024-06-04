@@ -1,10 +1,11 @@
 package com.teamsparta.courseregistration.domain.user.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Embeddable
+import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplication
+import com.teamsparta.courseregistration.domain.user.dto.UserResponse
+import jakarta.persistence.*
 
 @Embeddable
-class Profile (
+class Profile(
     @Column(name = "nickname", nullable = false)
     var nickname: String,
 )
