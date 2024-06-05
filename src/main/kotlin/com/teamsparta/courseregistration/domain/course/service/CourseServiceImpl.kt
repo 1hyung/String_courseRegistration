@@ -11,6 +11,7 @@ import com.teamsparta.courseregistration.domain.lecture.dto.*
 import com.teamsparta.courseregistration.domain.lecture.model.*
 import com.teamsparta.courseregistration.domain.lecture.repository.*
 import com.teamsparta.courseregistration.domain.user.repository.*
+import com.teamsparta.courseregistration.infra.aop.StopWatch
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -35,6 +36,7 @@ class CourseServiceImpl(
         return courseRepository.findAll().map { it.toResponse() }
     }
 
+    @StopWatch
     override fun getCourseById(courseId: Long): CourseResponse {
         return findCourseByIdOrThrow(courseId).toResponse()
     }
