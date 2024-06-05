@@ -33,11 +33,19 @@ dependencies {
     //implementation("com.h2database:h2")
     //aop 적용하기 위한 설정
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    //jjwt 로그인
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+
+    runtimeOnly("org.postgresql:postgresql")
+    //jjwt 로그인
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    runtimeOnly("org.postgresql:postgresql")
 }
 
 tasks.withType<KotlinCompile> {
