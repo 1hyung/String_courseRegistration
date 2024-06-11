@@ -25,7 +25,7 @@ class JwtPlugin(
         }
     }
 
-    fun generateAccessToken(subject: String, role: String): String {
+    fun generateAccessToken(subject: String, email: String, role: String): String {
         return generateToken(subject, role, Duration.ofHours(accessTokenExpirationHour))
     }
 
