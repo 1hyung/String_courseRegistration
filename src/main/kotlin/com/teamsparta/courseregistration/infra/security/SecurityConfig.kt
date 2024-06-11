@@ -5,13 +5,15 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+    private val authenticationEntrypoint: AuthenticationEntryPoint
 ) {
 
     @Bean
@@ -25,14 +27,15 @@ class SecurityConfig(
                     "/login",
                     "/signup",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
+                    "/v3/api-docs/**"
                 ).permitAll()
-                    // 위 URI를 제외하곤 모두 인증이 되어야 함.
                     .anyRequest().authenticated()
             }
-            // 기존 UsernamePasswordAuthenticationFilter 가 존재하던 자리에 JwtAuthenticationFilter 적용
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            // 예외처리
+            .exceptionHandling {
+                it.authenticationEntryPoint(authenticationEntrypoint)
+            }
             .build()
     }
-
 }
