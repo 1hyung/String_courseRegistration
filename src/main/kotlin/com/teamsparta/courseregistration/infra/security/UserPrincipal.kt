@@ -11,6 +11,5 @@ data class UserPrincipal(
     constructor(id: Long, email: String, roles: Set<String>) : this(
         id,
         email,
-        roles.map { SimpleGrantedAuthority("ROLE_$it" ) })
-
+        roles.map { SimpleGrantedAuthority("ROLE_$it") })
 }

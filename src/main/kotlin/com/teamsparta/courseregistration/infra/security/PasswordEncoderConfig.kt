@@ -10,6 +10,6 @@ class PasswordEncoderConfig {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder() //BCrypt를 암호화 기술을 이용해서 비밀번호를 인코딩
+        return BCryptPasswordEncoder() // BCrypt를 암호화 기술을 이용해서 비밀번호를 인코딩
     }
 }

@@ -30,9 +30,10 @@ class JwtAuthenticationFilter(
         if (jwt != null) {
             jwtPlugin.validateToken(jwt)
                 .onSuccess {
-                    val userId = it.payload.subject.toLong()
-                    val role = it.payload.get("role", String::class.java)
-                    val email = it.payload.get("email", String::class.java)
+                    val claims = it.body
+                    val userId = claims.subject.toLong()
+                    val role = claims["role"] as String
+                    val email = claims["email"] as String
 
                     val principal = UserPrincipal(
                         id = userId,
@@ -43,7 +44,7 @@ class JwtAuthenticationFilter(
                     val authentication = JwtAuthenticationToken(
                         principal = principal,
                         // request로 부터 요청 상세정보 생성
-                        details =  WebAuthenticationDetailsSource().buildDetails(request)
+                        details = WebAuthenticationDetailsSource().buildDetails(request)
                     )
                     // SecurityContext에 authentication 객체 저장
                     SecurityContextHolder.getContext().authentication = authentication

@@ -1,7 +1,11 @@
 package com.teamsparta.courseregistration.domain.user.service
 
 import com.teamsparta.courseregistration.domain.exception.ModelNotFoundException
-import com.teamsparta.courseregistration.domain.user.dto.*
+import com.teamsparta.courseregistration.domain.user.dto.LoginRequest
+import com.teamsparta.courseregistration.domain.user.dto.LoginResponse
+import com.teamsparta.courseregistration.domain.user.dto.SignUpRequest
+import com.teamsparta.courseregistration.domain.user.dto.UpdateUserProfileRequest
+import com.teamsparta.courseregistration.domain.user.dto.UserResponse
 import com.teamsparta.courseregistration.domain.user.exception.InvalidCredentialException
 import com.teamsparta.courseregistration.domain.user.model.Profile
 import com.teamsparta.courseregistration.domain.user.model.User
@@ -23,7 +27,7 @@ class UserServiceImpl(
     override fun login(request: LoginRequest): LoginResponse {
         val user = userRepository.findByEmail(request.email) ?: throw ModelNotFoundException("User", null)
 
-        if (user.role.name != request.role || !passwordEncoder.matches(request.password, user.password) ) {
+        if (user.role.name != request.role || !passwordEncoder.matches(request.password, user.password)) {
             throw InvalidCredentialException()
         }
 
@@ -65,5 +69,4 @@ class UserServiceImpl(
 
         return userRepository.save(user).toResponse()
     }
-
 }

@@ -1,6 +1,10 @@
 package com.teamsparta.courseregistration.domain.user.controller
 
-import com.teamsparta.courseregistration.domain.user.dto.*
+import com.teamsparta.courseregistration.domain.user.dto.LoginRequest
+import com.teamsparta.courseregistration.domain.user.dto.LoginResponse
+import com.teamsparta.courseregistration.domain.user.dto.SignUpRequest
+import com.teamsparta.courseregistration.domain.user.dto.UpdateUserProfileRequest
+import com.teamsparta.courseregistration.domain.user.dto.UserResponse
 import com.teamsparta.courseregistration.domain.user.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,14 +19,19 @@ class UserController(
     private val userService: UserService,
 ) {
 
+    /**
+     * 사용자 로그인 요청을 처리합니다.
+     */
     @PostMapping("/login")
     fun signIn(@RequestBody loginRequest: LoginRequest): ResponseEntity<LoginResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(userService.login(loginRequest))
-
     }
 
+    /**
+     * 사용자 회원가입 요청을 처리합니다.
+     */
     @PostMapping("/signup")
     fun signUp(@RequestBody signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
         return ResponseEntity
@@ -30,9 +39,13 @@ class UserController(
             .body(userService.signUp(signUpRequest))
     }
 
+    /**
+     * 사용자 프로필 업데이트 요청을 처리합니다.
+     */
     @PutMapping("/users/{userId}/profile")
-    fun updateUserProfile(@PathVariable userId: Long,
-                          @RequestBody updateUserProfileRequest: UpdateUserProfileRequest
+    fun updateUserProfile(
+        @PathVariable userId: Long,
+        @RequestBody updateUserProfileRequest: UpdateUserProfileRequest
     ): ResponseEntity<UserResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)

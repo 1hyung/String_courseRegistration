@@ -1,5 +1,8 @@
 package com.teamsparta.courseregistration.domain.course.dto
 
+/**
+ * 과목 응답 DTO
+ */
 data class CourseResponse(
     val id: Long?,
     val title: String,

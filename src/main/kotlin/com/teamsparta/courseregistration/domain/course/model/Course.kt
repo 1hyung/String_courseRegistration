@@ -3,7 +3,17 @@ package com.teamsparta.courseregistration.domain.course.model
 import com.teamsparta.courseregistration.domain.course.dto.CourseResponse
 import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplication
 import com.teamsparta.courseregistration.domain.lecture.model.Lecture
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "course")
@@ -34,35 +44,59 @@ class Course(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
+    /**
+     * 과목의 최대 지원자 수에 도달했는지 확인
+     */
     fun isFull(): Boolean {
         return numApplicants >= maxApplicants
     }
 
+    /**
+     * 과목이 마감되었는지 확인
+     */
     fun isClosed(): Boolean {
         return status == CourseStatus.CLOSED
     }
 
+    /**
+     * 과목 상태를 마감으로 변경
+     */
     fun close() {
         status = CourseStatus.CLOSED
     }
 
+    /**
+     * 지원자 추가
+     */
     fun addApplicant() {
         numApplicants += 1
     }
 
+    /**
+     * 강의 추가
+     */
     fun addLecture(lecture: Lecture) {
         lectures.add(lecture)
     }
 
+    /**
+     * 강의 삭제
+     */
     fun removeLecture(lecture: Lecture) {
         lectures.remove(lecture)
     }
 
+    /**
+     * 과목 신청 추가
+     */
     fun addCourseApplication(courseApplication: CourseApplication) {
         courseApplications.add(courseApplication)
     }
 }
 
+/**
+ * Course 엔티티를 CourseResponse DTO로 변환하는 확장 함수
+ */
 fun Course.toResponse(): CourseResponse {
     return CourseResponse(
         id = id!!,

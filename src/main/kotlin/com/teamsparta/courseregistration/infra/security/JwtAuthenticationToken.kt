@@ -11,7 +11,7 @@ class JwtAuthenticationToken(
 ) : AbstractAuthenticationToken(principal.authorities), Serializable {
 
     init {
-        // JWT 검증이 됐을시에 바로 생성할 예정이므로, 생성시 authenticated를 true로 설정
+        // JWT 검증이 됐을 시에 바로 생성할 예정이므로, 생성 시 authenticated를 true로 설정
         super.setAuthenticated(true)
         super.setDetails(details)
     }
@@ -23,5 +23,4 @@ class JwtAuthenticationToken(
     override fun isAuthenticated(): Boolean {
         return true
     }
-
 }

@@ -1,17 +1,30 @@
 package com.teamsparta.courseregistration.domain.course.service
 
-import com.teamsparta.courseregistration.domain.course.dto.*
-import com.teamsparta.courseregistration.domain.course.model.*
-import com.teamsparta.courseregistration.domain.course.repository.*
-import com.teamsparta.courseregistration.domain.courseapplication.dto.*
-import com.teamsparta.courseregistration.domain.courseapplication.model.*
-import com.teamsparta.courseregistration.domain.courseapplication.repository.*
-import com.teamsparta.courseregistration.domain.exception.*
-import com.teamsparta.courseregistration.domain.lecture.dto.*
-import com.teamsparta.courseregistration.domain.lecture.model.*
-import com.teamsparta.courseregistration.domain.lecture.repository.*
-import com.teamsparta.courseregistration.domain.user.repository.*
+import com.teamsparta.courseregistration.domain.course.dto.CourseResponse
+import com.teamsparta.courseregistration.domain.course.dto.CreateCourseRequest
+import com.teamsparta.courseregistration.domain.course.dto.UpdateCourseRequest
+import com.teamsparta.courseregistration.domain.course.model.Course
+import com.teamsparta.courseregistration.domain.course.model.CourseStatus
+import com.teamsparta.courseregistration.domain.course.model.toResponse
+import com.teamsparta.courseregistration.domain.course.repository.CourseRepository
+import com.teamsparta.courseregistration.domain.courseapplication.dto.ApplyCourseRequest
+import com.teamsparta.courseregistration.domain.courseapplication.dto.CourseApplicationResponse
+import com.teamsparta.courseregistration.domain.courseapplication.dto.UpdateApplicationStatusRequest
+import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplication
+import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplicationStatus
+import com.teamsparta.courseregistration.domain.courseapplication.model.toResponse
+import com.teamsparta.courseregistration.domain.courseapplication.repository.CourseApplicationRepository
+import com.teamsparta.courseregistration.domain.exception.ModelNotFoundException
+import com.teamsparta.courseregistration.domain.lecture.dto.AddLectureRequest
+import com.teamsparta.courseregistration.domain.lecture.dto.LectureResponse
+import com.teamsparta.courseregistration.domain.lecture.dto.UpdateLectureRequest
+import com.teamsparta.courseregistration.domain.lecture.model.Lecture
+import com.teamsparta.courseregistration.domain.lecture.model.toResponse
+import com.teamsparta.courseregistration.domain.lecture.repository.LectureRepository
+import com.teamsparta.courseregistration.domain.user.repository.UserRepository
 import com.teamsparta.courseregistration.infra.aop.StopWatch
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,16 +37,34 @@ class CourseServiceImpl(
     private val userRepository: UserRepository,
 ) : CourseService {
 
+    override fun getPaginatedCourseList(pageable: Pageable, status: String?): Page<CourseResponse> {
+        val courseStatus = when (status) {
+            "OPEN" -> CourseStatus.OPEN
+            "CLOSED" -> CourseStatus.CLOSED
+            null -> null
+            else -> throw IllegalArgumentException("The status is invalid")
+        }
+
+        return courseRepository.findByPageableAndStatus(pageable, courseStatus).map { it.toResponse() }
+    }
+
+    override fun getAllCourseList(): List<CourseResponse> {
+        return courseRepository.findAll().map { it.toResponse() }
+    }
+
+    override fun searchCourseList(title: String): List<CourseResponse> {
+        return courseRepository.searchCourseListByTitle(title).map { it.toResponse() }
+    }
+
     private fun findCourseByIdOrThrow(courseId: Long): Course {
         return courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
     }
 
     private fun findLectureByIdOrThrow(courseId: Long, lectureId: Long): Lecture {
-        return lectureRepository.findByCourseIdAndId(courseId, lectureId) ?: throw ModelNotFoundException("Lecture", lectureId)
-    }
-
-    override fun getAllCourseList(): List<CourseResponse> {
-        return courseRepository.findAll().map { it.toResponse() }
+        return lectureRepository.findByCourseIdAndId(courseId, lectureId) ?: throw ModelNotFoundException(
+            "Lecture",
+            lectureId
+        )
     }
 
     @StopWatch
@@ -123,7 +154,8 @@ class CourseServiceImpl(
     }
 
     override fun getCourseApplication(courseId: Long, applicationId: Long): CourseApplicationResponse {
-        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId) ?: throw ModelNotFoundException("CourseApplication", applicationId)
+        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId)
+            ?: throw ModelNotFoundException("CourseApplication", applicationId)
         return application.toResponse()
     }
 
@@ -133,9 +165,14 @@ class CourseServiceImpl(
     }
 
     @Transactional
-    override fun updateCourseApplicationStatus(courseId: Long, applicationId: Long, request: UpdateApplicationStatusRequest): CourseApplicationResponse {
+    override fun updateCourseApplicationStatus(
+        courseId: Long,
+        applicationId: Long,
+        request: UpdateApplicationStatusRequest
+    ): CourseApplicationResponse {
         val course = findCourseByIdOrThrow(courseId)
-        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId) ?: throw ModelNotFoundException("CourseApplication", applicationId)
+        val application = courseApplicationRepository.findByCourseIdAndId(courseId, applicationId)
+            ?: throw ModelNotFoundException("CourseApplication", applicationId)
 
         if (application.isProceeded()) {
             throw IllegalStateException("Application is already proceeded. applicationId: $applicationId")
@@ -154,9 +191,11 @@ class CourseServiceImpl(
                 }
                 courseRepository.save(course)
             }
+
             CourseApplicationStatus.REJECTED.name -> {
                 application.reject()
             }
+
             else -> {
                 throw IllegalArgumentException("Invalid status: ${request.status}")
             }

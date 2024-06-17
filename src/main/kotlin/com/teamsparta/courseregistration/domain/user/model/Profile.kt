@@ -1,8 +1,7 @@
 package com.teamsparta.courseregistration.domain.user.model
 
-import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplication
-import com.teamsparta.courseregistration.domain.user.dto.UserResponse
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 
 @Embeddable
 class Profile(

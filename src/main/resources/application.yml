@@ -12,9 +12,8 @@ logging:
         SQL: debug
         orm:
           jdbc:
-            bind:
-      springframework:
-        security: debug
+            bind: trace
+    org.springframework.security: debug
 auth:
   jwt:
     issuer: team.sparta.com
