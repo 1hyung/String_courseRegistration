@@ -1,10 +1,16 @@
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
   jpa:
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
         use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
 logging:
   level:
     org:
@@ -14,6 +20,7 @@ logging:
           jdbc:
             bind: trace
     org.springframework.security: debug
+
 auth:
   jwt:
     issuer: team.sparta.com

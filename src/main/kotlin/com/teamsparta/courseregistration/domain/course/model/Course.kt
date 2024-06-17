@@ -3,6 +3,7 @@ package com.teamsparta.courseregistration.domain.course.model
 import com.teamsparta.courseregistration.domain.course.dto.CourseResponse
 import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplication
 import com.teamsparta.courseregistration.domain.lecture.model.Lecture
+import com.teamsparta.courseregistration.domain.lecture.model.toResponse
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -105,5 +106,6 @@ fun Course.toResponse(): CourseResponse {
         status = status.toString(),
         maxApplicants = maxApplicants,
         numApplicants = numApplicants,
+        lectures = lectures.map { it.toResponse() } // Lecture 엔티티를 LectureResponse DTO로 변환
     )
 }
